@@ -47,7 +47,7 @@ namespace AuctionServer
             Console.WriteLine("A Client connected");
             SW.WriteLine(
                 "Welcome!\r\n Write 'exit' to close the connection, and 'bid' plus a natural number to bid on an item.");
-            SW.WriteLine("Hello.. This is what is currently going: " + _auction.currentItem.name + ". The lowest price is: " + _auction.currentItem.minPrice + " And this is the current price: " + _auction.currentItem.endPrice);
+            SW.WriteLine("Hello.. This is what is currently going: {0}. The lowest price is: {1:C} And this is the current price: {2:C}", _auction.currentItem.name, _auction.currentItem.minPrice, _auction.currentItem.endPrice);
 
 
             while (!done)
@@ -64,11 +64,6 @@ namespace AuctionServer
                             // Disconnect from broadcast
                             _auction.broadcastEvent -= _auction_broadcastEvent;
                             SW.WriteLine("Goodbye...");
-
-                            SW.Close();
-                            SR.Close();
-                            NS.Close();
-                            _client.Close();
                             
                             done = true;
                             break;
@@ -77,6 +72,15 @@ namespace AuctionServer
                             string bidString = _auction.Bid(ClientIP.ToString(), decimal.Parse(commands[1]));
 
                             SW.WriteLine(bidString);
+                            break;
+                        case "pause":
+                            _auction.broadcastEvent -= _auction_broadcastEvent;
+                            SW.WriteLine("When you are ready again, type 'ready'");
+                            break;
+                        case "ready":
+                            SW.WriteLine("Welcome back! This is the current item: {0}", _auction.currentItem.name);
+                            SW.WriteLine("It is currently set at the price {0:C}", _auction.currentItem.endPrice);
+                            _auction.broadcastEvent += _auction_broadcastEvent;
                             break;
                         default:
                             SW.WriteLine("What the **** are you doing?!");
@@ -92,7 +96,10 @@ namespace AuctionServer
                 
 
             }
-
+            SW.Close();
+            SR.Close();
+            NS.Close();
+            _client.Close();
         }
     }
 }

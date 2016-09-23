@@ -37,6 +37,7 @@ namespace AuctionServer
             // Same actions for all items
             foreach (Item item in itemList)
             {
+                
                 currentItem = item;
                 auctionRunning = true;
                 ResetGavel();
@@ -76,6 +77,7 @@ namespace AuctionServer
                             {
                                 broadcastEvent("Gavel: Sold!");
                                 Console.WriteLine("Gavel: Sold!");
+                                broadcastEvent(currentItem.winner);
                                 auctionRunning = false;
                                 
                             }
@@ -103,6 +105,7 @@ namespace AuctionServer
                 // Check if bid is higher than current
                 if (currentItem.endPrice <= amount)
                 {
+                    
                     broadcastEvent(id + " bids " + amount);
                     // Setting the new info
                     currentItem.endPrice = amount;
