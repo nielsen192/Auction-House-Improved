@@ -11,26 +11,21 @@ namespace AuctionServer
     internal class Auction
     {
         public delegate void broadcastDelegate(string message);
+        public event broadcastDelegate broadcastEvent;
 
-        private List<Item> itemList = new List<Item>();
+        private List<Item> itemList = new List<Item>
+        {
+            new Item() {name = "Swedish Penis Pump", minPrice = 69.69m, endPrice = 69.69m, winner = "No one"},
+            new Item() { name = "Burned Down PC", minPrice = 5608.67m, endPrice = 5608.67m, winner = "No one"},
+            new Item() { name = "My Tangy Socks", minPrice = 2000000.00m, endPrice = 2000000.00m, winner = "No one"},
+            new Item() { name = "A 'fun' day with the princess of Sweden", minPrice = 2.09m, endPrice = 2.09m, winner = "No one"}
+        };
 
         private bool auctionRunning;
         private readonly object gavelLock = new object();
         private readonly object itemLock = new object();
         public Item currentItem;
         private int gavel;
-
-        public Auction()
-        {
-            
-            // Add items to the list
-            itemList.Add(new Item() {name = "Swedish Penis Pump", minPrice = 69.69m, endPrice = 69.69m, winner = "No one"});
-            itemList.Add(new Item() { name = "Burned Down PC", minPrice = 5608.67m, endPrice = 5608.67m, winner = "No one"});
-            itemList.Add(new Item() { name = "My Tangy Socks", minPrice = 2000000.00m, endPrice = 2000000.00m, winner = "No one"});
-            itemList.Add(new Item() { name = "A 'fun' day with the princess of Sweden", minPrice = 2.09m, endPrice = 2.09m, winner = "No one"});
-        }
-
-        public event broadcastDelegate broadcastEvent;
 
         public void RunAuction()
         {
@@ -48,11 +43,12 @@ namespace AuctionServer
                 while (auctionRunning)
                 {
                     
-                    Thread.Sleep(1000);
+                    
 
                     // Locks gavel resource
                     lock (gavelLock)
                     {
+                        Thread.Sleep(1000);
                         gavel--;
 
                         if (gavel == 10)

@@ -27,12 +27,20 @@ namespace AuctionServer
 
         private void _auction_broadcastEvent(string message)
         {
-            // Set up streams for I/O
-            NetworkStream stream = new NetworkStream(_client);
-            StreamWriter writer = new StreamWriter(stream);
-            writer.AutoFlush = true;
-            // Send message
-            writer.WriteLine(message);
+            try
+            {
+                // Set up streams for I/O
+                NetworkStream stream = new NetworkStream(_client);
+                StreamWriter writer = new StreamWriter(stream);
+                writer.AutoFlush = true;
+                // Send message
+                writer.WriteLine(message);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Socket not connected, waiting for connection");
+                
+            }
         }
         // Method for running client
         public void RunClient()
@@ -96,6 +104,11 @@ namespace AuctionServer
                 
 
             }
+            if (_client.Connected == false)
+            {
+                _auction.broadcastEvent -= _auction_broadcastEvent;
+            }
+
             SW.Close();
             SR.Close();
             NS.Close();
